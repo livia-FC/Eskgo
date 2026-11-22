@@ -48,3 +48,5 @@ Legenda: [x] feito e verificado · [~] feito, não verificado de ponta a ponta �
 
 ## Como republicar
 Arraste esta pasta em vercel.com/new ou rode `npx vercel --prod`. Não há variáveis de ambiente: a URL e a chave publishable do Supabase são públicas por desenho.
+
+- [x] Repositório no GitHub (livia-FC/Eskgo) conectado à Vercel: cada commit na `main` publica o site automaticamente
