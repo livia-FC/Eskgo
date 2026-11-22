@@ -27,7 +27,7 @@ Legenda: [x] feito e verificado · [~] feito, não verificado de ponta a ponta �
 - [x] Cadastro com e-mail já existente agora avisa "já tem conta" (antes mostrava sucesso falso)
 - [ ] **Subir `girl.webp` no bucket público `brand` do Supabase Storage** (a foto da tela inicial é carregada de lá)
 - [ ] Supabase > Authentication > URL Configuration: Site URL = https://eskgo-livia-fc.vercel.app (senão o link do e-mail de confirmação aponta para localhost)
-- [ ] "Esqueci minha senha" ainda não existe
+- [x] "Esqueci minha senha": link no login, e-mail de redefinição e tela de nova senha
 ## Storage
 - [x] Bucket público `brand` (só imagens, até 2 MB) para a arte da tela inicial
 - [x] Bucket privado `avatars` (2 MB, jpeg/png/webp) com políticas por pasta do usuário
@@ -50,3 +50,5 @@ Legenda: [x] feito e verificado · [~] feito, não verificado de ponta a ponta �
 Arraste esta pasta em vercel.com/new ou rode `npx vercel --prod`. Não há variáveis de ambiente: a URL e a chave publishable do Supabase são públicas por desenho.
 
 - [x] Repositório no GitHub (livia-FC/Eskgo) conectado à Vercel: cada commit na `main` publica o site automaticamente
+- [x] Contas novas começam vazias (sem dados de exemplo); "Restaurar exemplo" na aba Conta continua disponível
+- [ ] Ativar proteção contra senhas vazadas (Authentication > Sign In / Providers > Password; pode exigir plano Pro)
