@@ -1,0 +1,6 @@
+-- Já aplicada no projeto ESKGO-PROJECct (pcscffaalvznamkfhfuy). Mantida aqui para versionamento.
+-- Resumo: 5 tabelas (profiles, budget_categories, cards, transactions, goals), PK composta (user_id,id),
+-- FKs compostas, CHECKs, índices, trigger updated_at, RLS owner-only em todas, anon sem acesso,
+-- bucket privado 'avatars' (pasta = auth.uid()) com 4 políticas em storage.objects.
+-- Para recriar em outro projeto, copie o SQL completo pelo painel: Database > Migrations
+-- (nomes: eskgo_schema_rls_storage e eskgo_demo_seed_function).

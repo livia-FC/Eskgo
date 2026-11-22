@@ -1,0 +1,93 @@
+// Documentação do schema do eskgo (espelha as migrations em supabase/migrations).
+// O Supabase é a fonte da verdade: use `prisma db pull` para sincronizar, não `prisma migrate`.
+// Segurança vem das políticas RLS (auth.uid() = user_id), que o Prisma não modela.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// 1:1 com auth.users (id = auth.users.id)
+model Profile {
+  id         String   @id @db.Uuid
+  fullName   String   @default("Lucas Marques") @map("full_name")
+  email      String?
+  balance    Decimal  @default(0) @db.Decimal(14, 2)
+  nextId     BigInt   @default(100) @map("next_id")
+  avatarPath String?  @map("avatar_path")
+  isDemo     Boolean  @default(false) @map("is_demo")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz
+
+  @@map("profiles")
+}
+
+model BudgetCategory {
+  userId       String        @map("user_id") @db.Uuid
+  name         String
+  cap          Decimal       @db.Decimal(14, 2)
+  isDemo       Boolean       @default(false) @map("is_demo")
+  updatedAt    DateTime      @default(now()) @map("updated_at") @db.Timestamptz
+  transactions Transaction[]
+
+  @@id([userId, name])
+  @@map("budget_categories")
+}
+
+model Card {
+  userId       String        @map("user_id") @db.Uuid
+  id           BigInt
+  nickname     String
+  last4        String        @db.Text /// 4 dígitos (CHECK ~ '^[0-9]{4}$'); nunca o número completo
+  creditLimit  Decimal       @map("credit_limit") @db.Decimal(14, 2)
+  bill         Decimal       @default(0) @db.Decimal(14, 2)
+  dueInDays    Int           @map("due_in_days")
+  gradient     Int           @default(0)
+  isDemo       Boolean       @default(false) @map("is_demo")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime      @default(now()) @map("updated_at") @db.Timestamptz
+  transactions Transaction[]
+
+  @@id([userId, id])
+  @@map("cards")
+}
+
+model Transaction {
+  userId      String          @map("user_id") @db.Uuid
+  id          BigInt
+  description String          @default("")
+  amount      Decimal         @db.Decimal(14, 2)
+  category    String
+  cardId      BigInt?         @map("card_id")
+  txDate      DateTime        @map("tx_date") @db.Date
+  isDemo      Boolean         @default(false) @map("is_demo")
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime        @default(now()) @map("updated_at") @db.Timestamptz
+  categoryRef BudgetCategory  @relation(fields: [userId, category], references: [userId, name], onUpdate: Cascade)
+  card        Card?           @relation(fields: [userId, cardId], references: [userId, id])
+
+  @@id([userId, id])
+  @@index([userId, txDate(sort: Desc)])
+  @@index([userId, category])
+  @@index([userId, cardId])
+  @@map("transactions")
+}
+
+model Goal {
+  userId        String   @map("user_id") @db.Uuid
+  id            BigInt
+  name          String
+  saved         Decimal  @default(0) @db.Decimal(14, 2)
+  target        Decimal  @db.Decimal(14, 2)
+  deadlineLabel String   @default("") @map("deadline_label")
+  isDemo        Boolean  @default(false) @map("is_demo")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @default(now()) @map("updated_at") @db.Timestamptz
+
+  @@id([userId, id])
+  @@map("goals")
+}
